@@ -1,5 +1,5 @@
 # Screwit-INITIALIZR
-Web scaffolding based on Flask help you to bootstrap your screwit application on **THE PLATFORM** now .
+Web scaffolding based on Flask help you to bootstrap your screwit application on **THE PLATFORM** .
 
 ## Build And Run
     
