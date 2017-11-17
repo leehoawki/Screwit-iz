@@ -7,6 +7,7 @@ import re
 app = Flask(__name__)
 
 TMP = "/tmp"
+BASE = os.environ.get("BASE", "")
 
 
 @app.route("/")
@@ -45,7 +46,7 @@ def create_project(project, base=TMP):
     return target
 
 
-def render_project(dir, project, base="/resource/project/"):
+def render_project(dir, project, base=BASE + "resource/project/"):
     mapping = {
         "App.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/App.java",
         "AppConfig.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/AppConfig.java",
@@ -67,7 +68,7 @@ def render_project(dir, project, base="/resource/project/"):
             raise Exception("Illegal mapping key=" + template + ", value=" + target)
 
 
-def render_module(dir, project, module, base="/resource/project/module/"):
+def render_module(dir, project, module, base=BASE + "resource/project/module/"):
     mapping = {
         "ModuleController.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/controller/{{ module }}Controller.java",
         "Module.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/entity/{{ module }}.java",
