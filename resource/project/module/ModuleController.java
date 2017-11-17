@@ -1,12 +1,12 @@
-package com.movitech.{{ project }}.controller;
+package com.movitech.{{ project.lower() }}.controller;
 
-import com.movitech.{{ project }}.{{ module }}.service.{{ module }}Service;
-import com.movitech.{{ project }}.base.entity.{{ module }};
+import com.movitech.{{ project.lower() }}.{{ module.lower() }}.service.{{ module }}Service;
+import com.movitech.{{ project.lower() }}.base.entity.{{ module }};
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/{{ module }}")
+@RequestMapping("/{{ module.lower() }}")
 public class {{ module }}Controller {
 
     @Autowired
@@ -28,6 +28,6 @@ public class {{ module }}Controller {
     @ResponseBody
     public {{ module }} add{{ module }}(@PathVariable String id, @RequestBody {{ module }} {{ module.lower() }}) {
         {{ module.lower() }}.setId(id);
-        return service.add{{ module }}({{ module }});
+        return service.add{{ module }}({{ module.lower() }});
     }
 }

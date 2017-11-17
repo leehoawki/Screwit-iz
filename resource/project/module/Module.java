@@ -1,4 +1,4 @@
-package com.movitech.{{ project }}.base.entity;
+package com.movitech.{{ project.lower() }}.base.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

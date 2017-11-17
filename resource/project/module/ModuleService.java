@@ -1,8 +1,8 @@
-package com.movitech.{{ project }}.{{ module.lower() }}.service;
+package com.movitech.{{ project.lower() }}.{{ module.lower() }}.service;
 
-import com.movitech.{{ project }}.base.entity.{{ module }};
-import com.movitech.{{ project }}.base.remote.Hello;
-import com.movitech.{{ project }}.{{ module.lower() }}.dao.{{ module }}Dao;
+import com.movitech.{{ project.lower() }}.base.entity.{{ module }};
+import com.movitech.{{ project.lower() }}.base.remote.Hello;
+import com.movitech.{{ project.lower() }}.{{ module.lower() }}.dao.{{ module }}Dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

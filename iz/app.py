@@ -2,6 +2,7 @@ from flask import Flask, url_for, redirect, request, make_response, send_file
 from jinja2 import Template
 import os
 import zipfile
+import re
 
 app = Flask(__name__)
 
@@ -16,13 +17,18 @@ def index():
 @app.route("/generate")
 def generate():
     project = get("project", "Demo")
+    name = project + "-" + str(hash(request))
+    dir = create_project(name)
+    render_project(dir, project)
+
     modules = get("modules", "Box")
-    dir = create_project(project)
-    ## render(dir)
-    filename = project + "-" + str(hash(request)) + ".zip"
-    target = make_zip(dir, filename)
+    for module in re.split("[;,]", modules):
+        if len(module) > 0:
+            render_module(dir, project, module)
+    zipfilename = name + ".zip"
+    target = make_zip(dir, zipfilename)
     response = make_response(send_file(target))
-    response.headers["Content-Disposition"] = "attachment; filename=" + filename + ";"
+    response.headers["Content-Disposition"] = "attachment; filename=" + zipfilename + ";"
     return response
 
 
@@ -35,52 +41,53 @@ def get(param, value=""):
 
 def create_project(project, base=TMP):
     target = base + "/" + project
-    if os.path.exists(base + "/" + project):
-        os.removedirs(target)
     os.makedirs(target)
     return target
 
 
-def render_project(context):
+def render_project(dir, project, base="resource/project/"):
     mapping = {
-        "App.java": "{{ project }}-api/src/main/java/com/movitech/{{ project }}/App.java",
-        "AppConfig.java": "{{ project }}-api/src/main/java/com/movitech/{{ project }}/AppConfig.java",
-        "AppUtils.java": "{{ project }}-api/src/main/java/com/movitech/{{ project }}/AppUtils.java",
+        "App.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/App.java",
+        "AppConfig.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/AppConfig.java",
+        "AppUtils.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/AppUtils.java",
         "application.properties": "{{ project }}-api/src/main/resources/application.properties",
         "application-dev.properties": "{{ project }}-api/src/main/resources/application-dev.properties",
         "application-prod.properties": "{{ project }}-api/src/main/resources/application-prod.properties",
-        "Hello.java": "{{ project }}-service/src/main/java/com/movitech/{{ project }}/base/remote/Hello.java",
+        "Hello.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/remote/Hello.java",
         "pom-api.xml": "{{ project }}-api/pom.xml",
         "pom-service.xml": "{{ project }}-service/pom.xml",
         "Dockerfile": "{{ project }}-api/Dockerfile",
         "README.md": "README.md",
-        "module": render_module
     }
 
-    for key, value in mapping:
-        if isinstance(value, str):
-            render_file(key, context, Template(value).render(context))
-        elif isinstance(value, function):
-            render_module(key, context)
+    for template, target in mapping.items():
+        if isinstance(target, str):
+            render_file(base + template, dir, {"project": project}, target)
         else:
-            raise Exception("Illegal mapping key=" + key + ", value=" + value)
-
-    return None
+            raise Exception("Illegal mapping key=" + template + ", value=" + target)
 
 
-def render_module(module, context):
+def render_module(dir, project, module, base="resource/project/module/"):
     mapping = {
-        "ModuleController.java": "{{ project }}-api/src/main/java/com/movitech/{{ project }}/controller/{{ module }}Controller.java",
-        "Module.java": "{{ project }}-service/src/main/java/com/movitech/{{ project }}/base/entity/{{ module }}.java",
-        "ModuleDao.java": "{{ project }}-service/src/main/java/com/movitech/{{ project }}/dao/{{ module }}Dao.java",
-        "ModuleService.java": "{{ project }}-service/src/main/java/com/movitech/{{ project }}/service/{{ module }}Service.java",
-        "ModuleServiceTest.java": "{{ project }}-service/src/test/java/com/movitech/{{ project }}/service/{{ module }}ServiceTest.java"
+        "ModuleController.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/controller/{{ module }}Controller.java",
+        "Module.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/entity/{{ module }}.java",
+        "ModuleDao.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/dao/{{ module }}Dao.java",
+        "ModuleService.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}Service.java",
+        "ModuleServiceTest.java": "{{ project }}-service/src/test/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}ServiceTest.java"
     }
-    return None
+    for template, target in mapping.items():
+        if isinstance(target, str):
+            render_file(base + template, dir, {"project": project, "module": module}, target)
+        else:
+            raise Exception("Illegal mapping key=" + template + ", value=" + target)
 
 
-def render_file(template, context, target):
-    with open(template, 'r') as input, open(target, 'w') as output:
+def render_file(template, dir, context, target):
+    abspath = dir + "/" + Template(target).render(context)
+    absdir = "/".join(abspath.split("/")[:-1])
+    if not os.path.exists(absdir):
+        os.makedirs(absdir)
+    with open(template, 'r') as input, open(dir + "/" + Template(target).render(context), 'w') as output:
         output.write(Template(input.read()).render(context))
 
 
@@ -95,7 +102,3 @@ def make_zip(source_dir, output_filename, base=TMP):
             zipf.write(pathfile, arcname)
     zipf.close()
     return target
-
-
-if __name__ == '__main__':
-    render_file("resource/project/module/ModuleService.java", {"module": "Box"}, "wa")

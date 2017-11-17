@@ -1,4 +1,4 @@
-package com.movitech.{{ project }}.service;
+package com.movitech.{{ project.lower() }}.service;
 
 import junit.framework.TestCase;
 import org.junit.Test;

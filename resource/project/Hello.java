@@ -1,4 +1,4 @@
-package com.movitech.{{ project }}.base.remote;
+package com.movitech.{{project.lower() }}.base.remote;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
