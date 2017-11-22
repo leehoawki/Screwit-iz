@@ -17,7 +17,7 @@ def index():
 
 @app.route("/generate")
 def generate():
-    project = get("project", "Demo")
+    project = formalized(get("project", "Demo"))
     name = project + "-" + str(hash(request))
     dir = create_project(name)
     render_project(dir, project)
@@ -25,12 +25,16 @@ def generate():
     modules = get("modules", "Box")
     for module in re.split("[;,]", modules):
         if len(module) > 0:
-            render_module(dir, project, module)
+            render_module(dir, project, formalized(module))
     zipfilename = name + ".zip"
     target = make_zip(dir, zipfilename)
     response = make_response(send_file(target))
     response.headers["Content-Disposition"] = "attachment; filename=" + zipfilename + ";"
     return response
+
+
+def formalized(string):
+    return string[0].upper() + string[1:]
 
 
 def get(param, value=""):
