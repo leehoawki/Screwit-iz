@@ -58,7 +58,7 @@ def render_project(dir, project, base=BASE + "resource/project/"):
         "application.properties": "{{ project }}-api/src/main/resources/application.properties",
         "application-dev.properties": "{{ project }}-api/src/main/resources/application-dev.properties",
         "application-prod.properties": "{{ project }}-api/src/main/resources/application-prod.properties",
-        "Hello.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/remote/Hello.java",
+        "HelloRemote.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/remote/HelloRemote.java",
         "pom-api.xml": "{{ project }}-api/pom.xml",
         "pom-service.xml": "{{ project }}-service/pom.xml",
         "Dockerfile": "{{ project }}-api/Dockerfile",
@@ -75,6 +75,8 @@ def render_project(dir, project, base=BASE + "resource/project/"):
 def render_module(dir, project, module, base=BASE + "resource/project/module/"):
     mapping = {
         "ModuleController.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/controller/{{ module }}Controller.java",
+        "ModuleConstants.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/constant/{{ module }}Constants.java",
+        "ModuleUtils.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/util/{{ module }}Utils.java",
         "Module.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/entity/{{ module }}.java",
         "ModuleDao.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/dao/{{ module }}Dao.java",
         "ModuleService.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}Service.java",
