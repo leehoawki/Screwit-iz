@@ -1,7 +1,7 @@
 package com.movitech.{{ project.lower() }}.{{ module.lower() }}.service;
 
 import com.movitech.{{ project.lower() }}.base.entity.{{ module }};
-import com.movitech.{{ project.lower() }}.base.remote.Hello;
+import com.movitech.{{ project.lower() }}.remote.HelloRemote;
 import com.movitech.{{ project.lower() }}.{{ module.lower() }}.dao.{{ module }}Dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class {{ module }}Service {
     {{ module }}Dao dao;
 
     @Autowired
-    Hello hello;
+    HelloRemote hello;
 
     public {{ module }} get{{ module }}(String id) {
         return dao.findOne(id);
