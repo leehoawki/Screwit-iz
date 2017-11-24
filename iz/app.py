@@ -3,6 +3,7 @@ from jinja2 import Template
 import os
 import zipfile
 import re
+import mysql.connector
 
 app = Flask(__name__)
 
@@ -17,15 +18,24 @@ def index():
 
 @app.route("/generate")
 def generate():
-    project = formalized(get("project", "Demo"))
+    project = formalized(request.args.get("project"))
     name = project + "-" + str(hash(request))
     dir = create_project(name)
     render_project(dir, project)
 
-    modules = get("modules", "Box")
-    for module in re.split("[;,]", modules):
+    modules = re.split("[;,]", request.args.get("modules"))
+    for module in modules:
         if len(module) > 0:
             render_module(dir, project, formalized(module))
+
+    full = request.args.get("full")
+    if full == "true":
+        raise Exception(full)
+    else:
+        for module in modules:
+            if len(module) > 0:
+                render_entity(dir, project, formalized(module), formalized(module))
+
     zipfilename = name + ".zip"
     target = make_zip(dir, zipfilename)
     response = make_response(send_file(target))
@@ -35,13 +45,6 @@ def generate():
 
 def formalized(string):
     return string[0].upper() + string[1:]
-
-
-def get(param, value=""):
-    p = request.args.get(param)
-    if p is None or len(p) == 0:
-        return value
-    return p
 
 
 def create_project(project, base=TMP):
@@ -77,14 +80,25 @@ def render_module(dir, project, module, base=BASE + "resource/project/module/"):
         "ModuleController.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/controller/{{ module }}Controller.java",
         "ModuleConstants.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/constant/{{ module }}Constants.java",
         "ModuleUtils.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/util/{{ module }}Utils.java",
-        "Module.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/entity/{{ module }}.java",
-        "ModuleDao.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/dao/{{ module }}Dao.java",
         "ModuleService.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}Service.java",
         "ModuleServiceTest.java": "{{ project }}-service/src/test/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}ServiceTest.java"
     }
     for template, target in mapping.items():
         if isinstance(target, str):
             render_file(base + template, dir, {"project": project, "module": module}, target)
+        else:
+            raise Exception("Illegal mapping key=" + template + ", value=" + target)
+
+
+def render_entity(dir, project, module, entity, fields=[], base=BASE + "resource/project/entity/"):
+    mapping = {
+        "Entity.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/entity/{{ entity }}.java",
+        "EntityDao.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/dao/{{ entity }}Dao.java",
+    }
+    for template, target in mapping.items():
+        if isinstance(target, str):
+            render_file(base + template, dir,
+                        {"project": project, "module": module, "entity": entity, "fields": fields}, target)
         else:
             raise Exception("Illegal mapping key=" + template + ", value=" + target)
 
@@ -109,3 +123,8 @@ def make_zip(source_dir, output_filename, base=TMP):
             zipf.write(pathfile, arcname)
     zipf.close()
     return target
+
+
+class Entity(object):
+    def __init__(self):
+        pass

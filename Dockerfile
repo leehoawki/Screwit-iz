@@ -2,6 +2,7 @@ FROM python:alpine
 COPY iz /iz
 COPY resource /resource
 RUN pip install flask
+RUN pip install mysql-connector-python
 ENV FLASK_APP /iz/app.py
 ENV BASE /
 EXPOSE 8080

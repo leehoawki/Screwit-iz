@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 </head>
 <body>
-<form id="form" action="/generate" method="get" role="form">
+<div id="container" class="form">
     <div class="container-fluid">
         <div class="row start-header">
             <div class="container">
@@ -20,25 +20,89 @@
                 <div class="col-sm-12 col-md-6">
                     <div class="form-group full name-form-group">
                         <label for="project" class="control-label">Project</label>
-                        <input tabindex="6" id="project" class="form-control" type="text" value="" placeholder="Demo"
-                               name="project">
+                        <input tabindex="6" id="project" class="form-control" type="text" value="" placeholder="Demo" v-model="project" name="project">
                     </div>
-                    <div class="form-group full packagename-form-group">
+                    <div class="form-group full name-form-group">
                         <label for="modules" class="control-label">Modules</label>
-                        <input tabindex="8" id="modules" class="form-control" type="text" value=""
-                               placeholder="Use ';' or ',' to separate your modules"
-                               name="modules">
+                        <input tabindex="8" id="modules" class="form-control" type="text" value="" placeholder="Use ';' or ',' to separate your modules" v-model="modules" name="modules">
+                    </div>
+                    <div v-if="full">
+                        <div class="form-group full name-form-group">
+                            <label for="type" class="control-label">Type</label>
+                            <input tabindex="8" id="type" class="form-control" type="text" value="" placeholder="MySQL" v-model="type" name="type">
+                        </div>
+                        <div class="form-group full name-form-group">
+                            <label for="host" class="control-label">host</label>
+                            <input tabindex="8" id="host" class="form-control" type="text" value="" placeholder="127.0.0.1" v-model="host" name="host">
+                        </div>
+                        <div class="form-group full name-form-group">
+                            <label for="port" class="control-label">Port</label>
+                            <input tabindex="8" id="port" class="form-control" type="text" value="" placeholder="3306" v-model="port" name="port">
+                        </div>
+                        <div class="form-group full name-form-group">
+                            <label for="username" class="control-label">Username</label>
+                            <input tabindex="8" id="username" class="form-control" type="text" value="" placeholder="root" v-model="username" name="username">
+                        </div>
+                        <div class="form-group full name-form-group">
+                            <label for="password" class="control-label">Password</label>
+                            <input tabindex="8" id="password" class="form-control" type="text" value="" placeholder="toor" v-model="password" name="password">
+                        </div>
+                        <div class="form-group full name-form-group">
+                            <label for="dbname" class="control-label">DBName</label>
+                            <input tabindex="8" id="dbname" class="form-control" type="text" value="" placeholder="test" v-model="dbname" name="dbname">
+                        </div>
+                    </div>
+                    <div v-if="!full" class="row">
+                        <p>Need to generate entity sources from database? <a href="#" v-on:click="turnover">Turn on Entity Scanning</a></p>
+                    </div>
+                    <div v-else class="row">
+                        <p>Too many options? <a href="#" v-on:click="turnover">Switch back to the Simple Version.</a></p>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <p class="text-center">
-                    <button tabindex="12" name="generate-project" type="submit" class="btn btn-lg btn-primary"
-                            role="button">Generate Project
-                    </button>
+                    <button tabindex="12" name="generate-project" type="submit" class="btn btn-lg btn-primary" v-on:click="generate" role="button">Generate Project</button>
                 </p>
             </div>
         </div>
     </div>
-</form>
+</div>
 </body>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/vue-resource"></script>
+<script>
+(function(Vue) {
+    new Vue({
+        el: '#container',
+
+        data: {
+            full: false,
+            project: "Demo",
+            modules: "Box",
+            type: "MySQL",
+            host: "127.0.0.1",
+            port: "3306",
+            username: "root",
+            password: "toor",
+            dbname: "test",
+        },
+
+        methods: {
+            turnover : function() {
+                this.full = !this.full;
+            },
+
+            generate: function() {
+                if (this.full) {
+                    window.open("/generate?" + "full=" + this.full + "&"+ "project=" + this.project + "&" + "modules=" + this.modules + "&"+ "type=" + this.type + "&"+ "host=" + this.host + "&"+ "port=" + this.port + "&"+ "username=" + this.username + "&"+ "password=" + this.password + "&"+ "dbname=" + this.dbname );
+                } else {
+                    window.open("/generate?" + "full=" + this.full + "&"+ "project=" + this.project + "&" + "modules=" + this.modules);
+                }
+            }
+        }
+    });
+})(Vue);
+
+</script>
+</html>
