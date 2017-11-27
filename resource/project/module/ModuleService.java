@@ -1,8 +1,10 @@
 package com.movitech.{{ project.lower() }}.{{ module.lower() }}.service;
 
-import com.movitech.{{ project.lower() }}.base.entity.{{ module }};
+{% for entity in entities %}
+import com.movitech.{{ project.lower() }}.base.entity.{{ entity }};
+import com.movitech.{{ project.lower() }}.{{ module.lower() }}.dao.{{ entity }}Dao;
+{% endfor %}
 import com.movitech.{{ project.lower() }}.remote.HelloRemote;
-import com.movitech.{{ project.lower() }}.{{ module.lower() }}.dao.{{ module }}Dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +12,21 @@ import org.springframework.stereotype.Service;
 public class {{ module }}Service {
 
     @Autowired
-    {{ module }}Dao dao;
-
-    @Autowired
     HelloRemote hello;
 
-    public {{ module }} get{{ module }}(String id) {
-        return dao.findOne(id);
+    {% for entity in entities %}
+    @Autowired
+    {{ entity }}Dao {{ entity.lower() }}dao;
+
+    public {{ entity }} get{{ entity }}(String id) {
+        return {{ entity.lower() }}dao.findOne(id);
     }
 
-    public {{ module }} add{{ module }}({{ module }} {{ module.lower() }}) {
-        return dao.save({{ module.lower() }});
+    public {{ entity }} add{{ entity }}({{ entity }} {{ entity.lower() }}) {
+        return {{ entity.lower() }}dao.save({{ entity.lower() }});
     }
 
+    {% endfor %}
     public String hello() {
         return hello.hello("{{ module.lower() }}");
     }
