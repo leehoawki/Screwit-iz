@@ -22,10 +22,6 @@
                         <label for="project" class="control-label">Project</label>
                         <input tabindex="6" id="project" class="form-control" type="text" value="" placeholder="Demo" v-model="project" name="project">
                     </div>
-                    <div class="form-group full name-form-group">
-                        <label for="modules" class="control-label">Modules</label>
-                        <input tabindex="8" id="modules" class="form-control" type="text" value="" placeholder="Use ';' or ',' to separate your modules" v-model="modules" name="modules">
-                    </div>
                     <div v-if="full">
                         <div class="form-group full name-form-group">
                             <label for="type" class="control-label">Type</label>
@@ -50,6 +46,12 @@
                         <div class="form-group full name-form-group">
                             <label for="dbname" class="control-label">DBName</label>
                             <input tabindex="8" id="dbname" class="form-control" type="text" value="" placeholder="test" v-model="dbname" name="dbname">
+                        </div>
+                    </div>
+                    <div v-else>
+                        <div class="form-group full name-form-group">
+                            <label for="modules" class="control-label">Modules</label>
+                            <input tabindex="8" id="modules" class="form-control" type="text" value="" placeholder="Use ';' or ',' to separate your modules" v-model="modules" name="modules">
                         </div>
                     </div>
                     <div v-if="!full" class="row">

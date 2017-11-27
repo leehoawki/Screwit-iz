@@ -1,4 +1,4 @@
-package com.movitech.{{ project.lower() }}.{{ entity.lower() }}.dao;
+package com.movitech.{{ project.lower() }}.{{ module.lower() }}.dao;
 
 import com.movitech.{{ project.lower() }}.base.entity.{{ entity }};
 import org.springframework.data.repository.CrudRepository;
