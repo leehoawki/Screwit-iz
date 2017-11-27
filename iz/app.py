@@ -178,7 +178,7 @@ class Entity(object):
 
         if table.find("_") != -1:
             self.module = table.split("_")[0]
-            self.name = "".join(formalized(table.split("_")[1:]))
+            self.name = "".join([formalized(x) for x in table.split("_")[1:]])
         else:
             self.module = None
             self.name = table
