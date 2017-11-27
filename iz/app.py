@@ -32,8 +32,9 @@ def generate():
         dbname = request.args.get("dbname")
         modules = set()
         entities = []
-        for entity in Database(hostname=host, port=port, user=username, password=password,
-                               database=dbname).get_entities():
+        database = Database(hostname=host, port=port, user=username, password=password,
+                               database=dbname)
+        for entity in database.get_entities():
             if entity.valid:
                 entities.append(entity)
                 module = entity.module
@@ -49,6 +50,7 @@ def generate():
             elif len(module) > 0:
                 render_module(dir, project, formalized(module),
                               [formalized(x.name) for x in entities if x.module == module])
+        database.close()
 
     else:
         modules = re.split("[;,]", request.args.get("modules"))
@@ -180,7 +182,7 @@ class Entity(object):
 
         if table.find("_") != -1:
             self.module = table.split("_")[0]
-            self.name = "".join([formalized(x) for x in table.split("_")[1:]])
+            self.name = "".join([formalized(x) for x in table.split("_")])
         else:
             self.module = None
             self.name = table
