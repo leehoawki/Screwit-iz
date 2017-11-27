@@ -11,11 +11,19 @@ import java.sql.Timestamp;
 public class {{ entity }} {
     @Id
     private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
     {% for type, name in fields %}
     private {{ type }} {{ name.lower() }};
 
     public {{ type }} get{{ name }}() {
-        return id;
+        return {{ name.lower() }};
     }
 
     public void set{{ name }}({{ type }} {{ name.lower() }}) {
@@ -27,8 +35,7 @@ public class {{ entity }} {
     public String toString() {
         return "{{ entity }}{" +
                 "id='" + id + '\'' +
-                {% for type, name in fields %}", {{ name.lower() }}='" + {{ name.lower() }} + "'" +
-                {% endfor %}
+                {% for type, name in fields %}", {{ name.lower() }}='" + {{ name.lower() }} + "'" + {% endfor %}
                 '}';
     }
 }

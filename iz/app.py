@@ -31,9 +31,11 @@ def generate():
         password = request.args.get("password")
         dbname = request.args.get("dbname")
         modules = set()
+        entities = []
         for entity in Database(hostname=host, port=port, user=username, password=password,
                                database=dbname).get_entities():
             if entity.valid:
+                entities.append(entity)
                 module = entity.module
                 if module is None:
                     module = project
@@ -42,15 +44,15 @@ def generate():
 
         for module in modules:
             if module is None:
-                render_module(dir, project, formalized(project))
+                render_module(dir, project, formalized(project), [formalized(x.name) for x in entities if x.module == project])
             elif len(module) > 0:
-                render_module(dir, project, formalized(module))
+                render_module(dir, project, formalized(module), [formalized(x.name) for x in entities if x.module == module])
 
     else:
         modules = re.split("[;,]", request.args.get("modules"))
         for module in modules:
             if len(module) > 0:
-                render_module(dir, project, formalized(module))
+                render_module(dir, project, formalized(module), [formalized(module)])
         for module in modules:
             if len(module) > 0:
                 render_entity(dir, project, formalized(module), formalized(module))
@@ -94,7 +96,7 @@ def render_project(dir, project, base=BASE + "resource/project/"):
             raise Exception("Illegal mapping key=" + template + ", value=" + target)
 
 
-def render_module(dir, project, module, base=BASE + "resource/project/module/"):
+def render_module(dir, project, module, entities, base=BASE + "resource/project/module/"):
     mapping = {
         "ModuleController.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/controller/{{ module }}Controller.java",
         "ModuleConstants.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/constant/{{ module }}Constants.java",
@@ -104,7 +106,7 @@ def render_module(dir, project, module, base=BASE + "resource/project/module/"):
     }
     for template, target in mapping.items():
         if isinstance(target, str):
-            render_file(base + template, dir, {"project": project, "module": module}, target)
+            render_file(base + template, dir, {"project": project, "module": module, "entities": entities}, target)
         else:
             raise Exception("Illegal mapping key=" + template + ", value=" + target)
 
