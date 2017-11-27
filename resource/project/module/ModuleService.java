@@ -16,7 +16,7 @@ public class {{ module }}Service {
 
     {% for entity in entities %}
     @Autowired
-    {{ entity }}Dao dao;
+    {{ entity }}Dao {{ entity.lower() }}dao;
 
     public {{ entity }} get{{ entity }}(String id) {
         return dao.findOne(id);
