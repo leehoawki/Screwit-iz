@@ -19,11 +19,11 @@ public class {{ module }}Service {
     {{ entity }}Dao {{ entity.lower() }}dao;
 
     public {{ entity }} get{{ entity }}(String id) {
-        return dao.findOne(id);
+        return {{ entity.lower() }}dao.findOne(id);
     }
 
     public {{ entity }} add{{ entity }}({{ entity }} {{ entity.lower() }}) {
-        return dao.save({{ entity.lower() }});
+        return {{ entity.lower() }}dao.save({{ entity.lower() }});
     }
 
     {% endfor %}
