@@ -44,9 +44,11 @@ def generate():
 
         for module in modules:
             if module is None:
-                render_module(dir, project, formalized(project), [formalized(x.name) for x in entities if x.module == project])
+                render_module(dir, project, formalized(project),
+                              [formalized(x.name) for x in entities if x.module == project])
             elif len(module) > 0:
-                render_module(dir, project, formalized(module), [formalized(x.name) for x in entities if x.module == module])
+                render_module(dir, project, formalized(module),
+                              [formalized(x.name) for x in entities if x.module == module])
 
     else:
         modules = re.split("[;,]", request.args.get("modules"))
