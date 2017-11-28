@@ -22,7 +22,7 @@ public class {{ module }}Controller {
 
 
     {% for entity in entities %}
-    @RequestMapping("/{id}")
+    @RequestMapping("/{{ entity }}/{id}")
     @ResponseBody
     public {{ entity }} get{{ entity }}(@PathVariable String id) {
         return service.get{{ entity }}(id);
