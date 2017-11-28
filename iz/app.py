@@ -33,7 +33,7 @@ def generate():
         modules = set()
         entities = []
         database = Database(hostname=host, port=port, user=username, password=password,
-                               database=dbname)
+                            database=dbname)
         for entity in database.get_entities():
             if entity.valid:
                 entities.append(entity)
@@ -70,6 +70,10 @@ def generate():
 
 def formalized(string):
     return string[0].upper() + string[1:]
+
+
+def camelized(string):
+    return "".join([formalized(x) for x in string.split("_")])
 
 
 def create_project(project, base=TMP):
@@ -197,7 +201,7 @@ class Entity(object):
                     self.valid = True
                     continue
                 if column_type.find(k) != -1:
-                    self.fields.append((v, formalized(column_name)))
+                    self.fields.append((v, camelized(column_name)))
                     continue
 
         c.close()
