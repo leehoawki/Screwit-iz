@@ -69,6 +69,8 @@ def generate():
 
 
 def formalized(string):
+    if len(string) == 0:
+        return ""
     return string[0].upper() + string[1:]
 
 
