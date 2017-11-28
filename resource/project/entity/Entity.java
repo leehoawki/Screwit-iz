@@ -29,13 +29,13 @@ public class {{ entity }} {
     public void set{{ name }}({{ type }} {{ name.lower() }}) {
         this.{{ name.lower() }} = {{ name.lower() }};
     }
-
     {% endfor %}
     @Override
     public String toString() {
         return "{{ entity }}{" +
                 "id='" + id + '\'' +
-                {% for type, name in fields %}", {{ name.lower() }}='" + {{ name.lower() }} + "'" + {% endfor %}
+                {% for type, name in fields %}
+                ", {{ name.lower() }}='" + {{ name.lower() }} + "'" + {% endfor %}
                 '}';
     }
 }

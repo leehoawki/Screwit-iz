@@ -198,12 +198,12 @@ class Entity(object):
         self.valid = False
         self.fields = []
         for column_type, column_name in [(x[0], x[1]) for x in c.fetchall()]:
+            if column_name == "id":
+                self.valid = True
+                continue
             for k, v in mappings.items():
-                if column_name == "id":
-                    self.valid = True
-                    continue
                 if column_type.find(k) != -1:
                     self.fields.append((v, camelized(column_name)))
-                    continue
+                    break
 
         c.close()
