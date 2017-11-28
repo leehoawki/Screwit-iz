@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "{{ entity.lower() }}")
+@Table(name = "{{ table }}")
 public class {{ entity }} {
     @Id
     private String id;
