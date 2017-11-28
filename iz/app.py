@@ -182,8 +182,10 @@ class Database(object):
 class Entity(object):
     def __init__(self, schema, table, connection):
         mappings = {
-            "varchar": "String",
+            "char": "String",
+            "text": "String",
             "int": "int",
+            "datetime": "Date",
         }
 
         if table.find("_") != -1:

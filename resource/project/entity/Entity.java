@@ -3,8 +3,7 @@ package com.movitech.{{ project.lower() }}.base.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "{{ entity.lower() }}")
