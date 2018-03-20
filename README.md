@@ -18,3 +18,10 @@ Or run it locally
     export FLASK_APP=iz/app.py
     export FLSAK_DEBUG=1
     flask run
+
+## Entity Scanning
+1. Tables with id field will be loaded as `[module]_[entity]` and sources will be created based on the description.
+
+2. Supported databases: MySQL.
+
+3. Supported field types:String, int, Date.

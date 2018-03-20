@@ -40,7 +40,7 @@ def generate():
                 module = entity.module
                 if module is None:
                     module = project
-                render_entity(dir, project, formalized(module), formalized(entity.name), entity.fields)
+                render_entity(dir, project, formalized(module), formalized(entity.name), entity.table, entity.fields)
                 modules.add(module)
 
         for module in modules:
@@ -59,7 +59,7 @@ def generate():
                 render_module(dir, project, formalized(module), [formalized(module)])
         for module in modules:
             if len(module) > 0:
-                render_entity(dir, project, formalized(module), formalized(module))
+                render_entity(dir, project, formalized(module), formalized(module), module.lower())
 
     zipfilename = name + ".zip"
     target = make_zip(dir, zipfilename)
@@ -121,7 +121,7 @@ def render_module(dir, project, module, entities, base=BASE + "resource/project/
             raise Exception("Illegal mapping key=" + template + ", value=" + target)
 
 
-def render_entity(dir, project, module, entity, fields=[], base=BASE + "resource/project/entity/"):
+def render_entity(dir, project, module, entity, table, fields=[], base=BASE + "resource/project/entity/"):
     mapping = {
         "Entity.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/entity/{{ entity }}.java",
         "EntityDao.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/dao/{{ entity }}Dao.java",
@@ -129,7 +129,8 @@ def render_entity(dir, project, module, entity, fields=[], base=BASE + "resource
     for template, target in mapping.items():
         if isinstance(target, str):
             render_file(base + template, dir,
-                        {"project": project, "module": module, "entity": entity, "fields": fields}, target)
+                        {"project": project, "module": module, "entity": entity, "table": table, "fields": fields},
+                        target)
         else:
             raise Exception("Illegal mapping key=" + template + ", value=" + target)
 
@@ -182,8 +183,10 @@ class Database(object):
 class Entity(object):
     def __init__(self, schema, table, connection):
         mappings = {
-            "varchar": "String",
+            "char": "String",
+            "text": "String",
             "int": "int",
+            "datetime": "Date",
         }
 
         if table.find("_") != -1:
@@ -196,6 +199,7 @@ class Entity(object):
         c.execute(
             "select column_type,column_name from columns where table_schema='" + schema + "' and table_name='" + table + "'")
         self.valid = False
+        self.table = table
         self.fields = []
         for column_type, column_name in [(x[0], x[1]) for x in c.fetchall()]:
             if column_name == "id":
