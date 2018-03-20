@@ -3,7 +3,6 @@ from jinja2 import Template
 import os
 import zipfile
 import re
-import mysql.connector
 
 app = Flask(__name__)
 
