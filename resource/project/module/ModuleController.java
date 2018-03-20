@@ -14,13 +14,6 @@ public class {{ module }}Controller {
     @Autowired
     {{ module }}Service service;
 
-    @RequestMapping("/")
-    @ResponseBody
-    public String index() {
-        return service.hello();
-    }
-
-
     {% for entity in entities %}
     @RequestMapping("/{{ entity.lower() }}/{id}")
     @ResponseBody
