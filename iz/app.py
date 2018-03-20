@@ -86,16 +86,14 @@ def create_project(project, base=TMP):
 
 def render_project(dir, project, base=BASE + "resource/project/"):
     mapping = {
-        "App.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/App.java",
-        "AppConfig.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/AppConfig.java",
-        "AppUtils.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/AppUtils.java",
-        "application.properties": "{{ project }}-api/src/main/resources/application.properties",
-        "application-dev.properties": "{{ project }}-api/src/main/resources/application-dev.properties",
-        "application-prod.properties": "{{ project }}-api/src/main/resources/application-prod.properties",
-        "HelloRemote.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/remote/HelloRemote.java",
-        "pom-api.xml": "{{ project }}-api/pom.xml",
-        "pom-service.xml": "{{ project }}-service/pom.xml",
-        "Dockerfile": "{{ project }}-api/Dockerfile",
+        "App.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/App.java",
+        "AppConfig.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/AppConfig.java",
+        "AppUtils.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/AppUtils.java",
+        "application.properties": "{{ project }}/src/main/resources/application.properties",
+        "application-dev.properties": "{{ project }}/src/main/resources/application-dev.properties",
+        "application-prod.properties": "{{ project }}/src/main/resources/application-prod.properties",
+        "pom.xml": "{{ project }}/pom.xml",
+        "Dockerfile": "{{ project }}/Dockerfile",
         "README.md": "README.md",
     }
 
@@ -108,11 +106,11 @@ def render_project(dir, project, base=BASE + "resource/project/"):
 
 def render_module(dir, project, module, entities, base=BASE + "resource/project/module/"):
     mapping = {
-        "ModuleController.java": "{{ project }}-api/src/main/java/com/movitech/{{ project.lower() }}/controller/{{ module }}Controller.java",
-        "ModuleConstants.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/constant/{{ module }}Constants.java",
-        "ModuleUtils.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/util/{{ module }}Utils.java",
-        "ModuleService.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}Service.java",
-        "ModuleServiceTest.java": "{{ project }}-service/src/test/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}ServiceTest.java"
+        "ModuleController.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/controller/{{ module }}Controller.java",
+        "ModuleConstants.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/base/constant/{{ module }}Constants.java",
+        "ModuleUtils.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/base/util/{{ module }}Utils.java",
+        "ModuleService.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}Service.java",
+        "ModuleServiceTest.java": "{{ project }}/src/test/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}ServiceTest.java"
     }
     for template, target in mapping.items():
         if isinstance(target, str):
@@ -123,8 +121,8 @@ def render_module(dir, project, module, entities, base=BASE + "resource/project/
 
 def render_entity(dir, project, module, entity, table, fields=[], base=BASE + "resource/project/entity/"):
     mapping = {
-        "Entity.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/base/entity/{{ entity }}.java",
-        "EntityDao.java": "{{ project }}-service/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/dao/{{ entity }}Dao.java",
+        "Entity.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/base/entity/{{ entity }}.java",
+        "EntityDao.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/dao/{{ entity }}Dao.java",
     }
     for template, target in mapping.items():
         if isinstance(target, str):

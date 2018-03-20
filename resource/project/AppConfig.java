@@ -24,6 +24,6 @@ public class AppConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("{{ project }}-API").build();
+        return new ApiInfoBuilder().title("{{ project }}").build();
     }
 }
