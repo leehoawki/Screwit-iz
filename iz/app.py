@@ -23,43 +23,13 @@ def generate():
     dir = create_project(name)
     render_project(dir, project)
 
-    full = request.args.get("full")
-    if full == "true":
-        host = request.args.get("host")
-        port = int(request.args.get("port"))
-        username = request.args.get("username")
-        password = request.args.get("password")
-        dbname = request.args.get("dbname")
-        modules = set()
-        entities = []
-        database = Database(hostname=host, port=port, user=username, password=password,
-                            database=dbname)
-        for entity in database.get_entities():
-            if entity.valid:
-                entities.append(entity)
-                module = entity.module
-                if module is None:
-                    module = project
-                render_entity(dir, project, formalized(module), formalized(entity.name), entity.table, entity.fields)
-                modules.add(module)
-
-        for module in modules:
-            if module is None:
-                render_module(dir, project, formalized(project),
-                              [formalized(x.name) for x in entities if x.module == project])
-            elif len(module) > 0:
-                render_module(dir, project, formalized(module),
-                              [formalized(x.name) for x in entities if x.module == module])
-        database.close()
-
-    else:
-        modules = re.split("[;,]", request.args.get("modules"))
-        for module in modules:
-            if len(module) > 0:
-                render_module(dir, project, formalized(module), [formalized(module)])
-        for module in modules:
-            if len(module) > 0:
-                render_entity(dir, project, formalized(module), formalized(module), module.lower())
+    modules = re.split("[;,]", request.args.get("modules"))
+    for module in modules:
+        if len(module) > 0:
+            render_module(dir, project, formalized(module), [formalized(module)])
+    for module in modules:
+        if len(module) > 0:
+            render_entity(dir, project, formalized(module), formalized(module), module.lower())
 
     zipfilename = name + ".zip"
     target = make_zip(dir, zipfilename)
