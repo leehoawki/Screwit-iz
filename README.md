@@ -9,6 +9,7 @@ Web scaffolding based on Flask help you to bootstrap your screwit application on
     docker push $REGISTRY/screwit-iz
     
     # Swarm Node
+    docker service rm screwit-iz
     export REGISTRY=172.19.50.78:5000 
     export NODEPORT=9001
     docker service create --replicas 3 --name screwit-iz --network=cluster --publish $NODEPORT:8080 $REGISTRY/screwit-iz
