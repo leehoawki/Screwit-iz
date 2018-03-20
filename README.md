@@ -13,7 +13,7 @@ Run it in dockers,
     docker service rm screwit-iz
     docker service create --replicas 3 --name screwit-iz --network=cluster --publish $NODEPORT:8080 $REGISTRY/screwit-iz
   
-Or run it locally.
+or run it locally.
 
     export FLASK_APP=iz/app.py
     export FLSAK_DEBUG=1
