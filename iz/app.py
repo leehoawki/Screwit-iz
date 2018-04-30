@@ -61,12 +61,6 @@ def change_text(x):
         return "{{ " + string.lower() + ".capitalize() }}"
 
 
-def add_context(context, key, value):
-    c = context.copy()
-    c[key] = value
-    return c
-
-
 def create_project(project, base=TMP):
     target = base + "/" + project
     os.makedirs(target)
