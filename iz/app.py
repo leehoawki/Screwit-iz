@@ -3,11 +3,14 @@ from jinja2 import Template
 import os
 import zipfile
 import re
+import time
+import logging
 
 app = Flask(__name__)
 
 TMP = "/tmp"
 BASE = os.environ.get("BASE", "")
+RES = "resource/project"
 
 
 @app.route("/")
@@ -17,18 +20,31 @@ def index():
 
 @app.route("/generate")
 def generate():
-    project = formalized(request.args.get("project"))
+    project = request.args.get("project").lower()
     name = project + "-" + str(hash(request))
+    modules = [x.lower() for x in re.split("[;,]", request.args.get("modules"))]
     dir = create_project(name)
-    render_project(dir, project)
 
-    modules = re.split("[;,]", request.args.get("modules"))
-    for module in modules:
-        if len(module) > 0:
-            render_module(dir, project, formalized(module), [formalized(module)])
-    for module in modules:
-        if len(module) > 0:
-            render_entity(dir, project, formalized(module), formalized(module), module.lower())
+    date = time.strftime("%Y-%m-%d", time.localtime())
+    context = {'project': project, 'date': date, "modules": modules}
+
+    for (root, dirs, files) in os.walk(RES):
+        for filename in files:
+            full_path = os.path.join(root, filename)
+            template_path = full_path
+            target = template_path[len(RES):]
+            target = target.replace("project", "{{ project }}")
+            target = target.replace("date", "{{ date }}")
+            if target.find("module") != 0:
+                pat = re.compile(r'(module)', re.I)
+                target = pat.sub(change_text, target)
+                for module in modules:
+                    if len(module) > 0:
+                        c = context.copy()
+                        c["module"] = module
+                        render_file(BASE + full_path, dir, c, target)
+            else:
+                render_file(BASE + full_path, dir, context, target)
 
     zipfilename = name + ".zip"
     target = make_zip(dir, zipfilename)
@@ -37,14 +53,18 @@ def generate():
     return response
 
 
-def formalized(string):
-    if len(string) == 0:
-        return ""
-    return string[0].upper() + string[1:]
+def change_text(x):
+    string = x.group(0)
+    if string.islower():
+        return "{{ " + string + " }}"
+    else:
+        return "{{ " + string.lower() + ".capitalize() }}"
 
 
-def camelized(string):
-    return "".join([formalized(x) for x in string.split("_")])
+def add_context(context, key, value):
+    c = context.copy()
+    c[key] = value
+    return c
 
 
 def create_project(project, base=TMP):
@@ -53,58 +73,10 @@ def create_project(project, base=TMP):
     return target
 
 
-def render_project(dir, project, base=BASE + "resource/project/"):
-    mapping = {
-        "App.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/App.java",
-        "AppConfig.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/AppConfig.java",
-        "AppUtils.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/AppUtils.java",
-        "application.properties": "{{ project }}/src/main/resources/application.properties",
-        "application-dev.properties": "{{ project }}/src/main/resources/application-dev.properties",
-        "application-prod.properties": "{{ project }}/src/main/resources/application-prod.properties",
-        "pom.xml": "{{ project }}/pom.xml",
-        "Dockerfile": "{{ project }}/Dockerfile",
-        "README.md": "README.md",
-    }
-
-    for template, target in mapping.items():
-        if isinstance(target, str):
-            render_file(base + template, dir, {"project": project}, target)
-        else:
-            raise Exception("Illegal mapping key=" + template + ", value=" + target)
-
-
-def render_module(dir, project, module, entities, base=BASE + "resource/project/module/"):
-    mapping = {
-        "ModuleController.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/controller/{{ module }}Controller.java",
-        "ModuleConstants.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/base/constant/{{ module }}Constants.java",
-        "ModuleUtils.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/base/util/{{ module }}Utils.java",
-        "ModuleService.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}Service.java",
-        "ModuleServiceTest.java": "{{ project }}/src/test/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/service/{{ module }}ServiceTest.java"
-    }
-    for template, target in mapping.items():
-        if isinstance(target, str):
-            render_file(base + template, dir, {"project": project, "module": module, "entities": entities}, target)
-        else:
-            raise Exception("Illegal mapping key=" + template + ", value=" + target)
-
-
-def render_entity(dir, project, module, entity, table, fields=[], base=BASE + "resource/project/entity/"):
-    mapping = {
-        "Entity.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/base/entity/{{ entity }}.java",
-        "EntityDao.java": "{{ project }}/src/main/java/com/movitech/{{ project.lower() }}/{{ module.lower() }}/dao/{{ entity }}Dao.java",
-    }
-    for template, target in mapping.items():
-        if isinstance(target, str):
-            render_file(base + template, dir,
-                        {"project": project, "module": module, "entity": entity, "table": table, "fields": fields},
-                        target)
-        else:
-            raise Exception("Illegal mapping key=" + template + ", value=" + target)
-
-
 def render_file(template, dir, context, target):
+    app.logger.warn("template=" + template + " rendering with target =" + target)
     abspath = dir + "/" + Template(target).render(context)
-    absdir = "/".join(abspath.split("/")[:-1])
+    absdir = "/".join(re.split("[/\\\]", abspath)[:-1])
     if not os.path.exists(absdir):
         os.makedirs(absdir)
     with open(template, 'r') as input, open(dir + "/" + Template(target).render(context), 'w') as output:

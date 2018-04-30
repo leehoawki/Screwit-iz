@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: user
+      author: movitech
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: username
+                  type: varchar(255)
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - loadData:
+            encoding: UTF-8
+            file: db/changelog/csv/user.csv
+            separator: ","
+            tableName: user
+       {% for module in modules %}
+        - createTable:
+            tableName: {{ module }}
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+       {% endfor %}
+
