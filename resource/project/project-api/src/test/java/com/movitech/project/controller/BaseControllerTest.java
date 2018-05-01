@@ -1,7 +1,7 @@
 package com.movitech.{{ project }}.controller;
 
 import com.google.gson.Gson;
-import com.movitech.test.base.Response;
+import com.movitech.{{ project }}.base.Response;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
