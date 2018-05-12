@@ -7,6 +7,6 @@ import javax.transaction.Transactional;
 
 @Transactional
 @Repository
-public interface {{ module.capitalize() }}Dao extends JpaRepository<{{ module.capitalize() }}, String> {
+public interface {{ module.capitalize() }}Dao extends JpaRepository<{{ module.capitalize() }}, Integer> {
 
 }

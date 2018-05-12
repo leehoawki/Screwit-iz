@@ -54,8 +54,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LogInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/register")
                 .excludePathPatterns("/*swagger-**")
                 .excludePathPatterns("/*swagger-**/**")
                 .excludePathPatterns("/**/api-docs");

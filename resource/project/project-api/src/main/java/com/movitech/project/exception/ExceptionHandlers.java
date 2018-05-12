@@ -12,6 +12,7 @@ public class ExceptionHandlers {
     @ExceptionHandler({IllegalArgumentException.class})
     @ResponseBody
     public Response<String> iae(Exception ex) {
+        ex.printStackTrace();
         return Response.error(5000, ex.getMessage());
     }
 }

@@ -6,23 +6,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 public class PageInfo {
-    private int pageSize = 10;
+    private int pagesize = 10;
 
-    private int pageNum = 0;
+    private int pagenum = 0;
 
     private long total;
 
-    private String sortBy;
+    private String sortby = "id";
 
-    private int order;
+    private int order = 0;
 
     public PageInfo() {
 
     }
 
     public PageInfo(Page page) {
-        this.pageSize = page.getSize();
-        this.pageNum = page.getNumber();
+        this.pagesize = page.getSize();
+        this.pagenum = page.getNumber();
         this.total = page.getTotalElements();
     }
 
@@ -43,34 +43,45 @@ public class PageInfo {
     }
 
     public String getSortBy() {
-        return sortBy;
+        return sortby;
     }
 
     public void setSortBy(String sortBy) {
-        this.sortBy = sortBy;
+        this.sortby = sortBy;
     }
 
     public int getPageNum() {
-        return pageNum;
+        return pagenum;
     }
 
     public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
+        this.pagenum = pageNum;
     }
 
     public int getPageSize() {
-        return pageSize;
+        return pagesize;
     }
 
     public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+        this.pagesize = pageSize;
     }
 
     public Pageable pageable() {
         Sort sort;
-        if (order > 0) sort = new Sort(Sort.Direction.ASC, sortBy);
-        else sort = new Sort(Sort.Direction.DESC, sortBy);
-        PageRequest pageRequest = new PageRequest(pageNum, pageSize, sort);
+        if (order > 0) sort = new Sort(Sort.Direction.ASC, sortby);
+        else sort = new Sort(Sort.Direction.DESC, sortby);
+        PageRequest pageRequest = new PageRequest(pagenum, pagesize, sort);
         return pageRequest;
+    }
+
+    @Override
+    public String toString() {
+        return "PageInfo{" +
+                "pagesize=" + pagesize +
+                ", pagenum=" + pagenum +
+                ", total=" + total +
+                ", sortby='" + sortby + '\'' +
+                ", order=" + order +
+                '}';
     }
 }
