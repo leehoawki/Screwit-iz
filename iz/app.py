@@ -4,7 +4,6 @@ import os
 import zipfile
 import re
 import time
-import logging
 
 app = Flask(__name__)
 

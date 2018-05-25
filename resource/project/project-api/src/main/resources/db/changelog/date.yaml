@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: user
-      author: movitech
+      author: seeking
       changes:
         - createTable:
             tableName: user
