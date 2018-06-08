@@ -33,7 +33,6 @@ def generate():
             template_path = full_path
             target = template_path[len(RES):]
             target = target.replace("project", "{{ project }}")
-            target = target.replace("date", "{{ date }}")
             if target.find("module") != 0:
                 pat = re.compile(r'(module)', re.I)
                 target = pat.sub(change_text, target)
@@ -72,7 +71,8 @@ def render_file(template, dir, context, target):
     absdir = "/".join(re.split("[/\\\]", abspath)[:-1])
     if not os.path.exists(absdir):
         os.makedirs(absdir)
-    with open(template, 'r') as input, open(dir + "/" + Template(target).render(context), 'w') as output:
+    with open(template, 'r', encoding='utf-8') as input, \
+            open(dir + "/" + Template(target).render(context), 'w', encoding='utf-8', newline='\n') as output:
         output.write(Template(input.read()).render(context))
 
 

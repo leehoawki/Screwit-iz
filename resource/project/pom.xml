@@ -12,6 +12,7 @@
     <modules>
         <module>{{ project }}-api</module>
         <module>{{ project }}-core</module>
+        <module>{{ project }}-util</module>
     </modules>
 
     <parent>

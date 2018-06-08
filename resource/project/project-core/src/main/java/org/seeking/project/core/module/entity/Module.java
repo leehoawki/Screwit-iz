@@ -1,11 +1,11 @@
 package org.seeking.{{ project }}.core.{{ module }}.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import org.seeking.{{ project }}.core.base.entity.BaseEntity;
 
 @Entity
 @Table(name = "{{ module }}")
-public class {{ module.capitalize() }} {
+public class {{ module.capitalize() }} extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

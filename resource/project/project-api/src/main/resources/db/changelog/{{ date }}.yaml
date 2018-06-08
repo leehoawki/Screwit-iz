@@ -35,5 +35,17 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: created_by
+                  type: varchar(255)
+              - column:
+                  name: updated_date
+                  type: timestamp
+              - column:
+                  name: updated_by
+                  type: varchar(255)
        {% endfor %}
 
