@@ -43,7 +43,6 @@ def generate():
                         render_file(BASE + full_path, dir, c, target)
             else:
                 render_file(BASE + full_path, dir, context, target)
-
     zipfilename = name + ".zip"
     target = make_zip(dir, zipfilename)
     response = make_response(send_file(target))
@@ -66,7 +65,7 @@ def create_project(project, base=TMP):
 
 
 def render_file(template, dir, context, target):
-    app.logger.warn("template=" + template + " rendering with target =" + target)
+    app.logger.info("template=" + template + " rendering with target=" + target)
     abspath = dir + "/" + Template(target).render(context)
     absdir = "/".join(re.split("[/\\\]", abspath)[:-1])
     if not os.path.exists(absdir):
@@ -87,3 +86,7 @@ def make_zip(source_dir, output_filename, base=TMP):
             zipf.write(pathfile, arcname)
     zipf.close()
     return target
+
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000)
