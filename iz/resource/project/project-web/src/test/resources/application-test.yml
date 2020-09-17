@@ -1,0 +1,33 @@
+apollo:
+  bootstrap:
+    enabled: false
+    eagerLoad:
+      enabled: false
+
+spring:
+  application:
+    name: {{ project }}
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      initial-size: 10
+      max-active: 100
+      max-wait: 60000
+      min-evictable-idle-time-millis: 300000
+      min-idle: 10
+      pool-prepared-statements: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      url:
+      username:
+      password:
+      validation-query: SELECT 1
+  jackson:
+    time-zone: GMT+8
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+logging:
+  config: classpath:logback.xml
+
