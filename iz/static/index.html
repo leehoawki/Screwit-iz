@@ -51,7 +51,7 @@
 
         methods: {
             generate: function() {
-                window.open("/generate?" + "project=" + this.project + "&" + "modules=" + this.modules);
+                window.open("/generate?" + "project=" + this.project + "&" + "modules=" + this.modules + "&timestamp="+ (new Date()).valueOf());
             }
         }
     });

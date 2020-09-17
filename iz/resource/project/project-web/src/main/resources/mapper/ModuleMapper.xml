@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dw.securities.ptms.dao.DemoDao">
+
+    <resultMap id="{{ module }}Map" type="org.seeking.{{ project }}.model.{{ module.capitalize() }}">
+        <id property="id" column="id"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="{{ module }}Map">
+        select id, name
+        from demo
+    </select>
+
+</mapper>

@@ -1,6 +1,6 @@
 FROM python:alpine
 COPY iz /iz
-COPY resource /resource
+COPY iz/resource /resource
 RUN pip install flask
 RUN pip install mysql-connector-python
 ENV FLASK_APP /iz/app.py
