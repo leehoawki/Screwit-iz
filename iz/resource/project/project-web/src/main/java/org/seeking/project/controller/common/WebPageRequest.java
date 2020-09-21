@@ -2,23 +2,23 @@ package org.seeking.{{ project }}.controller.common;
 
 
 public abstract class WebPageRequest {
-    protected int pageindex = 1;
+    protected int pageIndex = 1;
 
-    protected int pagesize = 10;
+    protected int pageSize = 10;
 
-    public int getPagesize() {
-        return pagesize;
+    public int getPageSize() {
+        return pageSize;
     }
 
-    public void setPagesize(int pagesize) {
-        this.pagesize = pagesize;
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
-    public int getPageindex() {
-        return pageindex;
+    public int getPageIndex() {
+        return pageIndex;
     }
 
-    public void setPageindex(int pageindex) {
-        this.pageindex = pageindex;
+    public void setPageIndex(int pageIndex) {
+        this.pageIndex = pageIndex;
     }
 }
