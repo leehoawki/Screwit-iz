@@ -1,6 +1,6 @@
 package org.seeking.{{ project }}.exception;
 
-import org.seeking.{{ project }}.conf.request.WebResponse;
+import org.seeking.{{ project }}.controller.common.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.ErrorPage;
